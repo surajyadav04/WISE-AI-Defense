@@ -745,6 +745,46 @@
             .sidebar { display: none; }
             .main-content { margin-left: 0; padding: 16px; }
         }
+        /* ===== TOGGLE SWITCH ===== */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 18px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px; width: 12px;
+            left: 2px; bottom: 2px;
+            background-color: var(--text-muted);
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: var(--safe-green);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+        input:checked + .slider:before {
+            transform: translateX(16px);
+            background-color: var(--safe-green);
+            box-shadow: 0 0 5px var(--safe-green);
+        }
+        input:disabled + .slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -890,20 +930,44 @@
                         </div>
                         <div class="sensor-grid" style="display: flex; flex-direction: column; gap: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">📷 Camera Access</span>
-                                <span id="dash-sensor-camera" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b;">UNKNOWN</span>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">📷 Camera Access</span>
+                                    <span id="dash-sensor-camera" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b; width: fit-content; margin-top: 4px;">UNKNOWN</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="dash-toggle-camera" data-setting="camera">
+                                    <span class="slider"></span>
+                                </label>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">🎤 Microphone</span>
-                                <span id="dash-sensor-mic" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b;">UNKNOWN</span>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">🎤 Microphone</span>
+                                    <span id="dash-sensor-mic" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b; width: fit-content; margin-top: 4px;">UNKNOWN</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="dash-toggle-mic" data-setting="microphone">
+                                    <span class="slider"></span>
+                                </label>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">📍 Geolocation</span>
-                                <span id="dash-sensor-location" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b;">UNKNOWN</span>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">📍 Geolocation</span>
+                                    <span id="dash-sensor-location" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b; width: fit-content; margin-top: 4px;">UNKNOWN</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="dash-toggle-location" data-setting="location">
+                                    <span class="slider"></span>
+                                </label>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">📋 Clipboard API</span>
-                                <span id="dash-sensor-clipboard" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b;">UNKNOWN</span>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">🔔 Notifications</span>
+                                    <span id="dash-sensor-notifications" class="badge" style="background: rgba(0,0,0,0.5); color: #64748b; width: fit-content; margin-top: 4px;">UNKNOWN</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="dash-toggle-notifications" data-setting="notifications">
+                                    <span class="slider"></span>
+                                </label>
                             </div>
                         </div>
                     </div>

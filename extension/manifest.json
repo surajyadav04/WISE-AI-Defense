@@ -10,7 +10,8 @@
     "scripting",
     "downloads",
     "notifications",
-    "alarms"
+    "alarms",
+    "contentSettings"
   ],
   "host_permissions": [
     "http://*/*",

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     requestScan();
     loadHistory();
     fetchTelemetry();
+    initPermissionToggles();
     setInterval(fetchTelemetry, 1500);
 
     // 3. Initialize Live Systems
@@ -367,15 +368,7 @@ function fetchTelemetry() {
         if (!res || !res.data) return;
         const tel = res.data;
         
-        // Update Permissions
-        if (tel.permissions) {
-            updateSensorBadge('sensor-camera', tel.permissions.camera);
-            updateSensorBadge('sensor-mic', tel.permissions.microphone);
-            updateSensorBadge('sensor-location', tel.permissions.geolocation);
-            updateSensorBadge('sensor-clipboard', tel.permissions['clipboard-read']);
-        }
-        
-        // Update Fingerprinting
+        // Fingerprinting
         const fpList = document.getElementById('fingerprint-list');
         if (tel.fingerprinting && tel.fingerprinting.length > 0) {
             fpList.innerHTML = '';
@@ -394,11 +387,61 @@ function updateSensorBadge(id, state) {
     if (!badge || !state) return;
     
     badge.innerText = state.toUpperCase();
-    if (state === 'granted') {
+    if (state === 'granted' || state === 'allow') {
         badge.style.color = '#ef4444';
         badge.style.background = 'rgba(239, 68, 68, 0.2)';
-    } else if (state === 'denied' || state === 'prompt') {
+    } else if (state === 'denied' || state === 'block' || state === 'prompt' || state === 'ask') {
         badge.style.color = '#10b981';
         badge.style.background = 'rgba(16, 185, 129, 0.2)';
     }
+}
+
+// ===== CONTENT SETTINGS TOGGLES =====
+function initPermissionToggles() {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        if (!tabs || !tabs[0] || !tabs[0].url || !tabs[0].url.startsWith("http")) return;
+        const url = tabs[0].url;
+
+        const settings = [
+            { id: 'toggle-camera', type: 'camera', badgeId: 'sensor-camera' },
+            { id: 'toggle-mic', type: 'microphone', badgeId: 'sensor-mic' },
+            { id: 'toggle-location', type: 'location', badgeId: 'sensor-location' },
+            { id: 'toggle-notifications', type: 'notifications', badgeId: 'sensor-notifications' }
+        ];
+
+        settings.forEach(setting => {
+            const toggle = document.getElementById(setting.id);
+            if (!toggle) return;
+            
+            // Initial Load
+            if (chrome.contentSettings && chrome.contentSettings[setting.type]) {
+                chrome.contentSettings[setting.type].get({ primaryUrl: url }, (details) => {
+                    const isAllowed = details.setting === 'allow';
+                    toggle.checked = isAllowed;
+                    updateSensorBadge(setting.badgeId, details.setting);
+                });
+            } else {
+                toggle.disabled = true; // API not available
+            }
+
+            // On Toggle Change
+            toggle.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                const newSetting = isChecked ? 'allow' : 'block';
+                
+                if (chrome.contentSettings && chrome.contentSettings[setting.type]) {
+                    chrome.contentSettings[setting.type].set({
+                        primaryPattern: new URL(url).origin + '/*',
+                        setting: newSetting
+                    }, () => {
+                        updateSensorBadge(setting.badgeId, newSetting);
+                        // Force tab reload to apply block/allow if needed
+                        if (!isChecked) {
+                            chrome.tabs.reload(tabs[0].id);
+                        }
+                    });
+                }
+            });
+        });
+    });
 }

@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Fetch live hardware telemetry
     fetchDashboardTelemetry();
+    initDashboardPermissionToggles();
     setInterval(fetchDashboardTelemetry, 1500);
 
     // --- SMART URL EXTRACTOR ---
@@ -347,11 +348,60 @@ function updateDashSensorBadge(id, state) {
     if (!badge || !state) return;
     
     badge.innerText = state.toUpperCase();
-    if (state === 'granted') {
+    if (state === 'granted' || state === 'allow') {
         badge.style.color = '#ef4444';
         badge.style.background = 'rgba(239, 68, 68, 0.2)';
-    } else if (state === 'denied' || state === 'prompt') {
+    } else if (state === 'denied' || state === 'block' || state === 'prompt' || state === 'ask') {
         badge.style.color = '#10b981';
         badge.style.background = 'rgba(16, 185, 129, 0.2)';
     }
+}
+
+// --- CONTENT SETTINGS TOGGLES (DASHBOARD) ---
+function initDashboardPermissionToggles() {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        if (!tabs || !tabs[0] || !tabs[0].url || !tabs[0].url.startsWith("http")) return;
+        const url = tabs[0].url;
+
+        const settings = [
+            { id: 'dash-toggle-camera', type: 'camera', badgeId: 'dash-sensor-camera' },
+            { id: 'dash-toggle-mic', type: 'microphone', badgeId: 'dash-sensor-mic' },
+            { id: 'dash-toggle-location', type: 'location', badgeId: 'dash-sensor-location' },
+            { id: 'dash-toggle-notifications', type: 'notifications', badgeId: 'dash-sensor-notifications' }
+        ];
+
+        settings.forEach(setting => {
+            const toggle = document.getElementById(setting.id);
+            if (!toggle) return;
+            
+            // Initial Load
+            if (chrome.contentSettings && chrome.contentSettings[setting.type]) {
+                chrome.contentSettings[setting.type].get({ primaryUrl: url }, (details) => {
+                    const isAllowed = details.setting === 'allow';
+                    toggle.checked = isAllowed;
+                    updateDashSensorBadge(setting.badgeId, details.setting);
+                });
+            } else {
+                toggle.disabled = true; // API not available
+            }
+
+            // On Toggle Change
+            toggle.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                const newSetting = isChecked ? 'allow' : 'block';
+                
+                if (chrome.contentSettings && chrome.contentSettings[setting.type]) {
+                    chrome.contentSettings[setting.type].set({
+                        primaryPattern: new URL(url).origin + '/*',
+                        setting: newSetting
+                    }, () => {
+                        updateDashSensorBadge(setting.badgeId, newSetting);
+                        if (!isChecked) {
+                            chrome.tabs.reload(tabs[0].id);
+                        }
+                    });
+                }
+            });
+        });
+    });
 }
