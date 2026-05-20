@@ -43,11 +43,11 @@ Visualize your security telemetry with our custom glass-morphic Command Center.
 ---
 
 ## 📦 Quick Start
-1. **Clone:** `git clone https://github.com/Ghost19-ui/WADE-AI-Defense.git`
+1. **Clone:** `git clone https://github.com/surajyadav04/WADE-AI-Defense.git`
 2. **Backend:** Set API keys (`GROQ`, `GEMINI`, `VIRUSTOTAL`) and run `python app.py`.
 3. **Extension:** Load the `/extension` folder in `chrome://extensions/`.
 
 ---
 
 ## 👨‍💻 Author
-**Tushar Kumar Saini** | Cybersecurity Strategist & B.Tech CSE Student, Parul University.
+**ADITYA KUMAR** | Cybersecurity Strategist & B.Tech CSE Student, Parul University.
