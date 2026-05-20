@@ -244,18 +244,21 @@
             background: var(--safe-green);
             color: #000;
             box-shadow: 0 0 15px var(--safe-glow);
+            border-color: var(--safe-green);
         }
 
         .btn-safe:hover {
             background: #fff;
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
             transform: translateY(-2px);
+            border-color: #fff;
         }
 
         .btn-intel {
-            background: rgba(0, 243, 255, 0.08);
+            background: rgba(0, 243, 255, 0.15);
             border-color: var(--primary-cyan);
-            color: var(--primary-cyan);
+            color: #fff;
+            text-shadow: 0 0 8px var(--primary-cyan);
         }
 
         .btn-intel:hover {
@@ -263,18 +266,22 @@
             color: var(--bg-deep);
             box-shadow: 0 0 20px var(--primary-glow);
             transform: translateY(-2px);
+            text-shadow: none;
         }
 
         .btn-danger {
-            background: transparent;
-            border-color: rgba(255, 255, 255, 0.15);
-            color: var(--text-muted);
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #fff;
+            text-shadow: 0 0 8px var(--danger-red);
         }
 
         .btn-danger:hover {
             border-color: var(--danger-red);
-            color: var(--danger-red);
-            background: rgba(239, 68, 68, 0.05);
+            background: var(--danger-red);
+            color: #fff;
+            box-shadow: 0 0 15px var(--danger-glow);
+            text-shadow: none;
         }
 
     </style>
