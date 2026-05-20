@@ -4,19 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WISE - Web Intelligence Security Engine</title>
-    <!-- Premium Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <!-- Futuristic Grid & Scanner Lines -->
+    <!-- Background Layers -->
+    <canvas id="particle-canvas"></canvas>
     <div class="cyber-grid"></div>
     <div class="scanline"></div>
 
     <div class="hud-container">
-        <!-- High-Tech Navigation Tabs -->
+        <!-- Brand Header -->
+        <div class="brand-bar">
+            <div class="brand-left">
+                <div class="brand-icon">🛡️</div>
+                <div>
+                    <div class="brand-name">WISE</div>
+                    <div class="brand-sub">Web Intelligence Security Engine</div>
+                </div>
+            </div>
+            <div class="brand-right">
+                <div class="status-indicator">
+                    <span class="status-dot online"></span>
+                    <span class="status-text">ONLINE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Info Strip -->
+        <div class="info-strip">
+            <div class="info-cell">
+                <span class="info-icon">🕐</span>
+                <span class="info-value" id="live-time">--:--:--</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-cell">
+                <span class="info-icon">📅</span>
+                <span class="info-value" id="live-date">Loading...</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-cell">
+                <span class="info-icon">📶</span>
+                <span class="info-value" id="net-speed">--</span>
+            </div>
+        </div>
+
+        <!-- Network Intelligence Panel -->
+        <div class="network-panel" id="network-panel">
+            <div class="net-header">
+                <span class="net-title">NETWORK INTELLIGENCE</span>
+                <span class="net-badge" id="net-secure-badge">--</span>
+            </div>
+            <div class="net-grid">
+                <div class="net-item">
+                    <span class="net-label">Connection</span>
+                    <span class="net-val" id="net-type">Detecting...</span>
+                </div>
+                <div class="net-item">
+                    <span class="net-label">SSID / Network</span>
+                    <span class="net-val" id="net-ssid">Scanning...</span>
+                </div>
+                <div class="net-item">
+                    <span class="net-label">Downlink</span>
+                    <span class="net-val" id="net-downlink">-- Mbps</span>
+                </div>
+                <div class="net-item">
+                    <span class="net-label">Latency (RTT)</span>
+                    <span class="net-val" id="net-rtt">-- ms</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
         <div class="tabs">
             <div class="tab active" id="tab-scan">
                 <span class="tab-icon">⚡</span>
@@ -28,9 +89,9 @@
             </div>
         </div>
 
-        <!-- Scanner Interface -->
+        <!-- Scanner View -->
         <div id="view-scan" class="view active">
-            <!-- Glowing Hologram Radar Orb -->
+            <!-- Risk Orb -->
             <div class="orb-container">
                 <div class="orb-outer-glow"></div>
                 <div class="orb-ring" id="score-ring"></div>
@@ -41,7 +102,7 @@
                 </div>
             </div>
 
-            <!-- Threat Warning Box (Hidden by default) -->
+            <!-- Threat Warning Box -->
             <div id="harm-display" class="harm-box">
                 <div class="harm-header">
                     <span class="harm-alert-icon">⚠️</span>
@@ -57,7 +118,7 @@
                 </div>
             </div>
 
-            <!-- System Diagnostics Data Grid -->
+            <!-- Diagnostics Grid -->
             <div class="data-grid">
                 <div class="data-row">
                     <div class="row-header">
@@ -82,7 +143,7 @@
                 </div>
             </div>
 
-            <!-- Action Controllers -->
+            <!-- Action Buttons -->
             <div class="action-buttons">
                 <button id="scan-btn" class="cyber-btn primary">
                     <span class="btn-glow"></span>
@@ -90,19 +151,18 @@
                 </button>
                 <button id="open-dashboard" class="cyber-btn secondary">
                     <span class="btn-glow"></span>
-                    <span class="btn-text">📊 CORE DASHBOARD</span>
+                    <span class="btn-text">📊 OPEN COMMAND CENTER</span>
                 </button>
             </div>
         </div>
 
-        <!-- History Interface -->
+        <!-- History View -->
         <div id="view-history" class="view">
             <div class="history-controls">
                 <span class="history-title">Activity Logs</span>
                 <span id="clear-history" class="clear-btn">✖ CLEAR ALL</span>
             </div>
             
-            <!-- Custom Scrollable Log List -->
             <div class="history-scroll-panel">
                 <div id="history-list" class="history-list">
                     <div class="empty-logs">No threat history detected.</div>
