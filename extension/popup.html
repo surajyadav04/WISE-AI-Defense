@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"> 
+    <link rel="stylesheet" href="popup.css">
+    <style>
+        body { width: 350px; background: #050505; color: white; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
+        
+        .tabs { display: flex; border-bottom: 1px solid #333; background: #111; }
+        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; color: #888; transition: 0.3s; font-weight: bold; }
+        .tab.active { color: #00f3ff; border-bottom: 2px solid #00f3ff; background: #0a0a0a; }
+        
+        .view { display: none; padding: 15px; }
+        .view.active { display: block; }
+
+        /* SCANNER STYLES */
+        .ring-container { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
+        .ring-circle { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #333; box-sizing: border-box; transition: border-color 0.5s; }
+        .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; font-weight: bold; color: white; }
+        
+        .data-grid { display: grid; grid-template-columns: 1fr; gap: 10px; text-align: left; font-size: 12px; }
+        .data-row { background: #111; padding: 10px; border-radius: 4px; border-left: 3px solid #333; }
+        .label { color: #888; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .value { color: #fff; font-weight: bold; }
+
+        .harm-box { border: 1px solid #ff003c; background: rgba(255, 0, 60, 0.1); padding: 10px; margin-top: 10px; border-radius: 4px; display: none; }
+        
+        /* HISTORY STYLES */
+        .history-item { border-bottom: 1px solid #222; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .h-url { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; color: #ccc; }
+        .h-score { font-weight: bold; font-size: 12px; }
+        .safe { color: #00f3ff; } .sus { color: #ffa500; } .danger { color: #ff003c; }
+
+        /* BUTTONS */
+        button { background: #00f3ff; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 4px; }
+        button:hover { background: #fff; }
+
+        /* DASHBOARD BUTTON STYLE */
+        .btn-dash { background: transparent; color: #00f3ff; border: 1px solid #00f3ff; margin-top: 10px; }
+        .btn-dash:hover { background: rgba(0, 243, 255, 0.1); color: #fff; }
+
+        /* DANGER / RESET BUTTON STYLE */
+        .btn-danger { background: #222; color: #ff003c; border: 1px solid #ff003c; margin-top: 20px; }
+        .btn-danger:hover { background: #ff003c; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="tabs">
+        <div class="tab active" id="tab-scan">SCANNER</div>
+        <div class="tab" id="tab-history">HISTORY</div>
+    </div>
+
+    <div id="view-scan" class="view active">
+        <div class="ring-container">
+            <div class="ring-circle" id="score-ring"></div>
+            <div class="score-text" id="score-num">--</div>
+            <div style="position:absolute; bottom:-20px; width:100%; text-align:center; font-size:10px; color:#888;">RISK SCORE</div>
+        </div>
+
+        <div id="harm-display" class="harm-box">
+            <div style="color:#ff9999; margin-bottom:5px;">⚠️ <strong>THREAT:</strong> <span id="harm-cause"></span></div>
+            <div style="color:#fff;">💥 <strong>EFFECT:</strong> <span id="harm-effect"></span></div>
+        </div>
+
+        <div class="data-grid" style="margin-top: 15px;">
+            <div class="data-row">
+                <span class="label">Target Domain</span>
+                <span class="value" id="domain-name" style="color:#00f3ff;">Scanning...</span>
+            </div>
+            <div class="data-row">
+                <span class="label">Domain Age</span>
+                <span class="value" id="domain-age">--</span>
+            </div>
+            <div class="data-row">
+                <span class="label">VirusTotal Intelligence</span>
+                <span class="value" id="vt-data">--</span>
+            </div>
+        </div>
+
+        <button id="scan-btn">🔄 RE-SCAN TAB</button>
+        <button id="open-dashboard" class="btn-dash">📊 OPEN COMMAND CENTER</button>
+    </div>
+
+    <div id="view-history" class="view">
+        <div style="text-align: right; margin-bottom: 10px;">
+            <span style="font-size: 10px; color: #555; cursor: pointer;" id="clear-history">CLEAR LOGS</span>
+        </div>
+        
+        <div id="history-list">
+            <div style="text-align:center; color:#555; margin-top:20px;">No recent scans.</div>
+        </div>
+
+        <button id="btn-reset" class="btn-danger">⚠️ RESET TRUSTED SITES</button>
+        <div style="font-size:10px; color:#555; text-align:center; margin-top:5px;">(Forget "Proceed Anyway" choices)</div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

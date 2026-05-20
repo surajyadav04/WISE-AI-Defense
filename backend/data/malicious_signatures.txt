@@ -1,0 +1,79 @@
+&& ls
+' or '1'='1
+--
+....//
+../
+..\
+.bat
+.com
+.exe
+.jar
+.pif
+.scr
+.sh
+.vbs
+/..
+/bin/bash
+/bin/sh
+/etc/passwd
+/etc/shadow
+/proc/self/environ
+;--
+;ls
+<img src=x
+<script>
+<svg/onload
+Invoke-WebRequest
+admin' --
+alert(
+autofocus
+backdoor
+benchmark(
+bitsadmin
+boot.ini
+c:\windows\
+cat /etc/
+certutil
+cmd.exe
+confirm(
+curl 
+dbms_pipe
+document.cookie
+document.domain
+drop table
+eicar-standard-antivirus-test-file
+eicar.com
+eval(
+expression(
+id;
+information_schema
+insert into
+javascript:
+javascript:alert
+malware
+nc -e
+netcat
+onerror=
+onfocus=
+onload=
+onmouseover=
+or 1=1
+pg_sleep
+ping -c
+powershell
+prompt(
+select * from
+shell.php
+system32
+trojan
+union all select
+union select
+vbscript:
+waitfor delay
+wget 
+whoami
+win.ini
+window.location
+xp_cmdshell
+xss://
+| ls

@@ -1,0 +1,75 @@
+/* --- WADE EXTENSION POPUP STYLES --- */
+body {
+    width: 350px;
+    height: 500px;
+    margin: 0;
+    background-color: #02040a; /* Deep Space Black */
+    background-image: 
+        linear-gradient(rgba(0, 255, 242, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 242, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+
+.hud-container {
+    padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Orb Animation */
+.orb-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orb-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 4px solid #333;
+    border-top: 4px solid #00fff2;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+    box-shadow: 0 0 15px #00fff2;
+}
+
+.orb-text { z-index: 10; text-align: center; }
+#trust-score { font-size: 42px; font-weight: 800; color: #fff; }
+.status-label { font-size: 10px; color: #00fff2; letter-spacing: 2px; }
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Info Panel */
+.info-panel {
+    width: 100%;
+    background: rgba(0, 20, 40, 0.6);
+    border-left: 3px solid #00fff2;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.scrolling-text { font-family: monospace; color: #ddd; font-size: 12px; }
+
+/* Button */
+.cyber-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 2px solid #00fff2;
+    color: #00fff2;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.cyber-btn:hover { background: #00fff2; color: #000; box-shadow: 0 0 20px #00fff2; }

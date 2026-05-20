@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WADE Command Center</title>
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --panel-bg: rgba(15, 15, 20, 0.6);
+            --primary-cyan: #00f3ff;
+            --primary-glow: rgba(0, 243, 255, 0.4);
+            --danger-red: #ff003c;
+            --danger-glow: rgba(255, 0, 60, 0.4);
+            --safe-green: #00ff66;
+            --warn-orange: #ffa500;
+            --text-main: #e0e0e0;
+            --text-muted: #888899;
+        }
+
+        /* 3D Cyber-Grid Background */
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center bottom;
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Subtle moving scanline overlay */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 10px;
+            background: var(--primary-cyan);
+            opacity: 0.1;
+            box-shadow: 0 0 20px var(--primary-cyan);
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        @keyframes scanline {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        .container { width: 95%; max-width: 1400px; z-index: 2; position: relative; perspective: 1000px; }
+
+        .header {
+            text-align: center; border-bottom: 2px solid var(--primary-cyan);
+            padding-bottom: 15px; margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+        .header h1 { color: var(--primary-cyan); margin: 0; text-transform: uppercase; letter-spacing: 3px; }
+
+        /* Glassmorphism & 3D Transition for Cards */
+        .glass-panel {
+            background-color: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        
+        /* Highlight on hover */
+        .glass-panel:hover {
+            border-color: rgba(0, 243, 255, 0.5);
+            box-shadow: 0 15px 40px 0 var(--primary-glow);
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px; }
+        .stat-card { text-align: center; }
+        .stat-card h3 { margin: 0 0 10px 0; color: var(--text-muted); font-size: 14px; transform: translateZ(20px); }
+        .stat-card .value { font-size: 38px; font-weight: bold; color: var(--primary-cyan); transform: translateZ(40px); text-shadow: 0 0 15px var(--primary-glow); }
+
+        .tables-grid { display: grid; grid-template-columns: 2fr 1.5fr; gap: 20px; }
+        .side-panels { display: flex; flex-direction: column; gap: 20px; }
+        
+        .glass-panel h2 { margin-top: 0; color: var(--primary-cyan); font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; transform: translateZ(20px); }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; transform: translateZ(10px); }
+        th, td { padding: 12px; text-align: left; font-size: 13px; }
+        th { color: var(--text-muted); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #333;}
+        
+        /* Interactive Table Rows */
+        tbody tr { background: rgba(255,255,255,0.02); transition: all 0.2s; border-radius: 8px;}
+        tbody tr:hover { background: rgba(0, 243, 255, 0.08); transform: scale(1.01) translateX(5px); box-shadow: -5px 0 0 var(--primary-cyan); }
+
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; box-shadow: 0 0 8px currentColor;}
+        .badge.safe { background-color: rgba(0, 255, 102, 0.1); color: var(--safe-green); border: 1px solid var(--safe-green); }
+        .badge.danger { background-color: rgba(255, 0, 60, 0.1); color: var(--danger-red); border: 1px solid var(--danger-red); }
+        .badge.warning { background-color: rgba(255, 165, 0, 0.1); color: var(--warn-orange); border: 1px solid var(--warn-orange); }
+
+        .empty-state { text-align: center; padding: 20px; color: var(--text-muted); font-style: italic; }
+
+        /* Cyberpunk Buttons */
+        .btn-action { padding: 6px 12px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; border-radius: 3px; font-family: inherit; margin-right: 5px; text-transform: uppercase; transition: 0.2s;}
+        .btn-white { background: transparent; color: var(--safe-green); border: 1px solid var(--safe-green); }
+        .btn-black { background: transparent; color: var(--danger-red); border: 1px solid var(--danger-red); }
+        .btn-remove { background: transparent; color: #888; border: 1px solid #555; }
+        .btn-white:hover { background: var(--safe-green); color: black; box-shadow: 0 0 10px var(--safe-green);}
+        .btn-black:hover { background: var(--danger-red); color: white; box-shadow: 0 0 10px var(--danger-red);}
+        .btn-remove:hover { border-color: white; color: white;}
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; transform: translateZ(20px); }
+        .input-group input { flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #333; color: white; font-family: inherit; border-radius: 4px; outline: none; transition: 0.3s;}
+        .input-group input:focus { border-color: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-glow); }
+        .input-group button { padding: 10px 15px; font-weight: bold; cursor: pointer; font-family: inherit; border-radius: 4px; border: none; text-transform: uppercase; transition: 0.2s;}
+        .add-white-btn { background: var(--safe-green); color: black; }
+        .add-white-btn:hover { box-shadow: 0 0 15px var(--safe-green); transform: scale(1.05); }
+        .add-black-btn { background: var(--danger-red); color: white; }
+        .add-black-btn:hover { box-shadow: 0 0 15px var(--danger-red); transform: scale(1.05); }
+
+        /* 3D Hologram Donut Chart */
+        .analytics-layout { display: flex; align-items: center; justify-content: center; gap: 30px; margin-top: 10px; transform: translateZ(30px); }
+        .donut-chart { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#333 0% 100%); display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.8); transition: transform 0.5s;}
+        .donut-chart:hover { transform: scale(1.1) rotate(5deg); }
+        .donut-hole { width: 85px; height: 85px; background-color: var(--bg-dark); border-radius: 50%; position: absolute; box-shadow: inset 0 0 10px rgba(0,0,0,0.9);}
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 5px; color: var(--text-main); }
+        .color-box { width: 12px; height: 12px; border-radius: 2px; box-shadow: 0 0 5px currentColor;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ WADE Intelligence Command Center</h1>
+            <p>Real-Time Threat Analytics & Access Controls</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card glass-panel interactive-3d">
+                <h3>Total Scans Logged</h3>
+                <div class="value" id="stat-total-scans">0</div>
+            </div>
+            <div class="stat-card glass-panel interactive-3d">
+                <h3>Force Blocked Domains</h3>
+                <div class="value" id="stat-blocked" style="color: var(--danger-red); text-shadow: 0 0 15px var(--danger-glow);">0</div>
+            </div>
+            <div class="stat-card glass-panel interactive-3d">
+                <h3>Custom Whitelisted</h3>
+                <div class="value" id="stat-trusted" style="color: var(--safe-green); text-shadow: 0 0 15px rgba(0,255,102,0.4);">0</div>
+            </div>
+            <div class="stat-card glass-panel interactive-3d" style="padding: 10px;">
+                <h3 style="margin-bottom: 5px;">Scan Distribution</h3>
+                <div class="analytics-layout">
+                    <div class="donut-chart" id="traffic-chart">
+                        <div class="donut-hole"></div>
+                    </div>
+                    <div>
+                        <div class="legend-item" style="color: var(--safe-green);"><div class="color-box" style="background: var(--safe-green);"></div> Safe (<span id="count-safe">0</span>)</div>
+                        <div class="legend-item" style="color: var(--warn-orange);"><div class="color-box" style="background: var(--warn-orange);"></div> Suspicious (<span id="count-warn">0</span>)</div>
+                        <div class="legend-item" style="color: var(--danger-red);"><div class="color-box" style="background: var(--danger-red);"></div> Blocked (<span id="count-danger">0</span>)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tables-grid">
+            <div class="data-panel glass-panel interactive-3d">
+                <h2>📡 Recent Scan Activity</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Target URL</th>
+                            <th>Risk</th>
+                            <th>Verdict</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="side-panels">
+                <div class="data-panel glass-panel interactive-3d">
+                    <h2>🌐 Tranco Top 10k Intelligence</h2>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: -5px; margin-bottom: 10px; transform: translateZ(10px);">Search WADE's local zero-latency database.</p>
+                    <div class="input-group">
+                        <input type="text" id="tranco-input" placeholder="Search domain (e.g. google.com)">
+                        <button style="background: var(--primary-cyan); color: black;" id="btn-search-tranco">Query</button>
+                    </div>
+                    <div id="tranco-result" style="font-size: 13px; font-weight: bold; text-align: center; min-height: 20px; transform: translateZ(20px);"></div>
+                </div>
+
+                <div class="data-panel glass-panel interactive-3d">
+                    <h2 style="color: var(--safe-green);">✅ Trusted Whitelist</h2>
+                    <div class="input-group">
+                        <input type="text" id="whitelist-input" placeholder="e.g., safe-school.edu">
+                        <button class="add-white-btn" id="add-whitelist">Trust</button>
+                    </div>
+                    <table>
+                        <tbody id="whitelist-table-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="data-panel glass-panel interactive-3d">
+                    <h2 style="color: var(--danger-red);">🚫 Force Blacklist</h2>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: -5px; margin-bottom: 15px; transform: translateZ(10px);">Overrides AI & Global Tranco List (Includes subdomains).</p>
+                    <div class="input-group">
+                        <input type="text" id="blacklist-input" placeholder="e.g., evil-phishing.com">
+                        <button class="add-black-btn" id="add-blacklist">Block</button>
+                    </div>
+                    <table>
+                        <tbody id="blacklist-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>

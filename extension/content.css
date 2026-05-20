@@ -1,0 +1,131 @@
+/* --- WADE HOVER STYLES (Injected into Websites) --- */
+
+/* The "Target Lock" - Cyan Underline */
+.wade-target-locked {
+    position: relative;
+    border-bottom: 2px solid #00d9ff !important;
+    cursor: crosshair !important;
+    transition: all 0.2s ease;
+    z-index: 9999;
+}
+
+/* The "Scanning" Pulse */
+.wade-scanning {
+    animation: scanPulse 1s infinite;
+    background: rgba(255, 200, 0, 0.1);
+    cursor: wait !important;
+}
+
+@keyframes scanPulse {
+    0% { border-bottom-color: orange; }
+    50% { border-bottom-color: yellow; }
+    100% { border-bottom-color: orange; }
+}
+
+/* The Dangerous Link Style */
+.wade-dangerous {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255,0,0,0.1),
+      rgba(255,0,0,0.1) 10px,
+      rgba(255,0,0,0.2) 10px,
+      rgba(255,0,0,0.2) 20px
+    ) !important;
+    border-bottom: 2px solid #ff0055 !important;
+    cursor: not-allowed !important;
+}
+
+/* --- NEW HUD STYLES (Matches hover_script.js) --- */
+
+/* The Main Container */
+#wade-hud-container {
+    pointer-events: none; /* Let clicks pass through */
+    animation: hudFadeIn 0.2s ease-out;
+}
+
+@keyframes hudFadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* The Cyberpunk Box */
+.wade-box {
+    background: rgba(10, 10, 15, 0.95); /* Deep Dark Blue/Black */
+    border: 1px solid #00f3ff;          /* Cyan Border */
+    border-radius: 4px;
+    padding: 12px;
+    width: 280px;                       /* Wider for Data Grid */
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+    backdrop-filter: blur(8px);         /* Glass Effect */
+    font-family: 'Courier New', monospace; /* Hacker Font */
+    text-align: left;
+    color: white;
+}
+
+/* Header Section */
+.wade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 4px;
+}
+
+.wade-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #555;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* The Target URL */
+.wade-target {
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* The Verdict (SAFE / DANGEROUS) */
+.wade-status {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 8px 0;
+    text-shadow: 0 0 5px rgba(255,255,255,0.2);
+}
+
+/* --- content.css --- */
+.wade-blocked-link {
+    background-color: #ff4c4c !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    text-decoration: line-through !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.wade-xss-warning {
+    outline: 2px dashed #ff4c4c !important;
+}
+
+/* Loading Spinner */
+.wade-spinner {
+    width: 10px;
+    height: 10px;
+    border: 2px solid #333;
+    border-top: 2px solid #00f3ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

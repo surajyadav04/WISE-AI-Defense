@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WADE: Access Denied</title>
+    <style>
+        body { background:black; color:red; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; font-family:Courier New, monospace; text-align:center; overflow:hidden; margin:0; }
+        h1 { font-size: 50px; text-shadow: 0 0 10px red; margin-bottom: 5px; }
+        h2 { color: white; font-size: 20px; }
+        .box { border: 1px solid red; padding: 20px; margin: 20px; box-shadow: 0 0 20px red; background: #111;}
+        
+        .btn-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+        button { padding:15px 30px; border:1px solid white; cursor:pointer; font-size:16px; font-family: 'Courier New', Courier, monospace; font-weight: bold; transition: 0.3s; }
+        
+        #btn-back { background:#333; color:white; }
+        #btn-back:hover { background: red; color: white; border-color: red; box-shadow: 0 0 15px red; }
+        
+        #btn-proceed { background:transparent; color:#888; border-color:#888; }
+        #btn-proceed:hover { background: #222; color: #ccc; border-color: #ccc; }
+    </style>
+</head>
+<body>
+    <h1>🚫 ACCESS DENIED</h1>
+    <h2>WADE Security Protocol Engaged</h2>
+    <div class="box">
+        <p><strong>VERDICT:</strong> <span id="verdict-text">MALICIOUS THREAT DETECTED</span></p>
+        <p><strong>REASON:</strong> Connection severed by WADE IPS to protect your system.</p>
+    </div>
+    
+    <div class="btn-container">
+        <button id="btn-back" style="background:#333; color:white; border:1px solid white;">GO BACK TO SAFETY</button>
+        <button id="btn-report" style="background:transparent; color:#00f3ff; border:1px solid #00f3ff;">📊 VIEW THREAT REPORT</button>
+        <button id="btn-proceed" style="background:transparent; color:#888; border:1px solid #888;">⚠️ I KNOW THE RISK, PROCEED</button>
+    </div>
+
+    <script src="blocked.js"></script>
+</body>
+</html>
