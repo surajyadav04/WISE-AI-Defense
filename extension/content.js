@@ -1,8 +1,8 @@
-// content.js - WADE Visual Interface (Cleaned for CSP redirect)
+// content.js - WISE Visual Interface (Cleaned for CSP redirect)
 
 let blockData = null;
 
-console.log("[WADE] Core Content Scanner Active.");
+console.log("[WISE] Core Content Scanner Active.");
 
 function neutralizeInlineScripts() {
     // Find elements that try to run JavaScript directly on click or hover
@@ -11,19 +11,19 @@ function neutralizeInlineScripts() {
     let neutralizedCount = 0;
 
     riskyElements.forEach(el => {
-        el.classList.add('wade-xss-warning'); 
+        el.classList.add('wise-xss-warning'); 
         
         // Neutralize the malicious href trigger
         if (el.hasAttribute('href') && el.getAttribute('href').toLowerCase().startsWith('javascript:')) {
-            el.setAttribute('data-wade-blocked-href', el.getAttribute('href'));
+            el.setAttribute('data-wise-blocked-href', el.getAttribute('href'));
             el.setAttribute('href', '#'); // Kill the link
-            el.title = "WADE Alert: Malicious inline script neutralized.";
+            el.title = "WISE Alert: Malicious inline script neutralized.";
             neutralizedCount++;
         }
     });
     
     if (neutralizedCount > 0) {
-        console.warn(`[WADE] Neutralized ${neutralizedCount} inline scripts on this page.`);
+        console.warn(`[WISE] Neutralized ${neutralizedCount} inline scripts on this page.`);
     }
 }
 
@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // REDIRECT TO SAFE BLOCK SCREEN
 function showBlockScreen(data) {
-    if (document.getElementById('wade-block-screen')) return;
+    if (document.getElementById('wise-block-screen')) return;
     
     // Pass the target URL and Threat Type as URL parameters so blocked.js can use them
     const targetUrl = encodeURIComponent(window.location.href);

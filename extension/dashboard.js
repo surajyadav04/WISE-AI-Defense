@@ -1,4 +1,4 @@
-// dashboard.js - WADE Command Center Logic
+// dashboard.js - WISE Command Center Logic
 
 document.addEventListener("DOMContentLoaded", () => {
     loadDashboardData();
@@ -251,7 +251,7 @@ function showForensicModal(scan) {
     // Generate contextual data based on the AI's risk score
     let threatType = scan.score > 75 ? "Malware / Phishing Payload" : "Unknown Anomaly";
     let harm = scan.score > 75 ? "High risk of drive-by download, credential theft, or remote code execution." : "Potential tracker or suspicious script.";
-    let action = "Connection Severed by WADE Edge-Sensor.";
+    let action = "Connection Severed by WISE Edge-Sensor.";
 
     // Hardcoded context specifically for the presentation demo
     if (scan.url.includes("wicar.org")) {
@@ -260,9 +260,9 @@ function showForensicModal(scan) {
     }
 
     const modalHtml = `
-        <div id="wade-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:9999; display:flex; justify-content:center; align-items:center;">
+        <div id="wise-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:9999; display:flex; justify-content:center; align-items:center;">
             <div style="background:#0a0a0c; border:1px solid #ff003c; box-shadow:0 0 40px rgba(255,0,60,0.4); width:600px; padding:30px; font-family:'Courier New', monospace; color:#00f3ff; border-radius:8px; position:relative;">
-                <button onclick="document.getElementById('wade-modal').remove()" style="position:absolute; top:10px; right:15px; background:transparent; border:none; color:#ff003c; font-size:20px; cursor:pointer;">✖</button>
+                <button onclick="document.getElementById('wise-modal').remove()" style="position:absolute; top:10px; right:15px; background:transparent; border:none; color:#ff003c; font-size:20px; cursor:pointer;">✖</button>
                 
                 <h2 style="color:#ff003c; text-transform:uppercase; border-bottom:1px solid #ff003c; padding-bottom:10px; margin-top:0;">🚨 Forensic Threat Report</h2>
 
@@ -284,10 +284,10 @@ function showForensicModal(scan) {
                 <div style="background:#111; padding:15px; border-radius:4px; color:#ddd; line-height:1.6; border:1px solid #333;">
                     <p style="margin-top:0;"><strong>Classification:</strong> <span style="color:#ffa500">${threatType}</span></p>
                     <p><strong>Scope & Harm:</strong> ${harm}</p>
-                    <p style="margin-bottom:0;"><strong>WADE Protocol:</strong> <span style="color:#00ff66">${action}</span></p>
+                    <p style="margin-bottom:0;"><strong>WISE Protocol:</strong> <span style="color:#00ff66">${action}</span></p>
                 </div>
 
-                <button onclick="document.getElementById('wade-modal').remove()" style="margin-top:25px; width:100%; padding:15px; background:#ff003c; color:#fff; border:none; font-weight:bold; font-size:16px; font-family:'Courier New', monospace; cursor:pointer; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='#cc0030'" onmouseout="this.style.background='#ff003c'">ACKNOWLEDGE & CLOSE</button>
+                <button onclick="document.getElementById('wise-modal').remove()" style="margin-top:25px; width:100%; padding:15px; background:#ff003c; color:#fff; border:none; font-weight:bold; font-size:16px; font-family:'Courier New', monospace; cursor:pointer; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='#cc0030'" onmouseout="this.style.background='#ff003c'">ACKNOWLEDGE & CLOSE</button>
             </div>
         </div>
     `;

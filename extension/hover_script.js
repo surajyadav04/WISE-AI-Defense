@@ -1,9 +1,9 @@
-// hover_script.js - WADE Heads-Up Display (Optimized for API Limits)
+// hover_script.js - WISE Heads-Up Display (Optimized for API Limits)
 
 let hoverTimer = null;
 let currentHUD = null;
 
-console.log("[WADE] Link Hover Scanner Active.");
+console.log("[WISE] Link Hover Scanner Active.");
 
 // =========================================================================
 // 🛑 MASS SCANNER DISABLED TO PREVENT "429 TOO MANY REQUESTS" API CRASHES
@@ -13,16 +13,16 @@ console.log("[WADE] Link Hover Scanner Active.");
 function scanPageLinks() {
     const links = document.querySelectorAll('a[href^="http"]');
     links.forEach(link => {
-        if (link.hasAttribute('data-wade-scanned')) return;
-        link.setAttribute('data-wade-scanned', 'true');
+        if (link.hasAttribute('data-wise-scanned')) return;
+        link.setAttribute('data-wise-scanned', 'true');
         chrome.runtime.sendMessage({ action: "scan_link_heuristic", url: link.href }, (response) => {
             if (response && response.risk_score > 75) {
-                link.classList.add('wade-blocked-link');
-                link.innerText = `[🚨 WADE BLOCKED: PHISHING] ${link.innerText}`;
+                link.classList.add('wise-blocked-link');
+                link.innerText = `[🚨 WISE BLOCKED: PHISHING] ${link.innerText}`;
                 link.addEventListener('click', function(event) {
                     event.preventDefault();
                     event.stopPropagation();
-                    alert("WADE IPS: Connection to this hostile domain has been severed.");
+                    alert("WISE IPS: Connection to this hostile domain has been severed.");
                 }, true);
             }
         });
@@ -92,7 +92,7 @@ function showHUD(element, url) {
     hud.innerHTML = `
         <div style="display: flex; align-items: center; gap: 10px;">
             <div style="width: 10px; height: 10px; border-radius: 50%; background: #00f3ff; box-shadow: 0 0 10px #00f3ff; animation: pulse 1s infinite;"></div>
-            <span id="wade-hud-status">SCANNING TARGET...</span>
+            <span id="wise-hud-status">SCANNING TARGET...</span>
         </div>
         <style>@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }</style>
     `;
@@ -105,7 +105,7 @@ function showHUD(element, url) {
     
     const wakeTimer = setTimeout(() => {
         if (!isResponded && currentHUD === hud) {
-            const statusSpan = hud.querySelector('#wade-hud-status');
+            const statusSpan = hud.querySelector('#wise-hud-status');
             if (statusSpan) {
                 statusSpan.innerText = "WAKING CLOUD AI...";
                 statusSpan.style.color = "#ffa500";
@@ -149,7 +149,7 @@ function showHUD(element, url) {
 
         hud.innerHTML = `
             <div style="border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 8px; display: flex; justify-content: space-between;">
-                <span style="color: #888; font-size: 10px;">WADE PROTOCOL</span>
+                <span style="color: #888; font-size: 10px;">WISE PROTOCOL</span>
                 <span style="color: ${color}; font-weight: bold; font-size: 14px;">RISK: ${data.risk_score}%</span>
             </div>
             <div style="margin-bottom: 6px; font-weight: bold; color: #fff;">${formatAge(data.domain_age)}</div>

@@ -17,7 +17,7 @@ function App() {
       .catch(err => console.error("Error fetching recent:", err));
   }, []);
 
-  if (!stats) return <div className="loading">Loading WADE Intelligence...</div>;
+  if (!stats) return <div className="loading">Loading WISE Intelligence...</div>;
 
   const chartData = [
     { name: 'Safe', value: stats.safe, color: '#00C49F' },
@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="dashboard-container">
       <header className="header">
-        <h1>🛡️ WADE Command Center</h1>
+        <h1>🛡️ WISE Command Center</h1>
         <p>Real-time Threat Intelligence Dashboard</p>
       </header>
 

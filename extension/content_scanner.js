@@ -1,5 +1,5 @@
 // --- content_scanner.js ---
-console.log("[WADE] DOM Scanner Active.");
+console.log("[WISE] DOM Scanner Active.");
 
 // 1. SCAN FOR INLINE MALICIOUS SCRIPTS (XSS / Payload Execution)
 function scanForInlineScripts() {
@@ -12,14 +12,14 @@ function scanForInlineScripts() {
         
         // Option B: Neutralize it (Remove the malicious script trigger)
         if (el.hasAttribute('href') && el.getAttribute('href').toLowerCase().startsWith('javascript:')) {
-            el.setAttribute('data-wade-blocked-href', el.getAttribute('href'));
+            el.setAttribute('data-wise-blocked-href', el.getAttribute('href'));
             el.setAttribute('href', '#'); // Neutralize the link
-            el.title = "WADE Alert: Malicious inline script neutralized.";
+            el.title = "WISE Alert: Malicious inline script neutralized.";
         }
     });
     
     if (riskyElements.length > 0) {
-        console.warn(`[WADE] Found and neutralized ${riskyElements.length} inline scripts.`);
+        console.warn(`[WISE] Found and neutralized ${riskyElements.length} inline scripts.`);
     }
 }
 
@@ -30,8 +30,8 @@ function scanEmailLinks() {
     
     links.forEach(link => {
         // Skip links we have already scanned
-        if (link.hasAttribute('data-wade-scanned')) return;
-        link.setAttribute('data-wade-scanned', 'true');
+        if (link.hasAttribute('data-wise-scanned')) return;
+        link.setAttribute('data-wise-scanned', 'true');
 
         // Ask the background.js to evaluate this specific URL
         chrome.runtime.sendMessage({ action: "scan_link_heuristic", url: link.href }, (response) => {
@@ -40,7 +40,7 @@ function scanEmailLinks() {
                 link.style.backgroundColor = "#ff4c4c";
                 link.style.color = "#ffffff";
                 link.style.fontWeight = "bold";
-                link.innerText = `[🚨 WADE BLOCKED: PHISHING] ${link.innerText}`;
+                link.innerText = `[🚨 WISE BLOCKED: PHISHING] ${link.innerText}`;
                 
                 // Disable the link so it cannot be clicked
                 link.style.pointerEvents = "none";

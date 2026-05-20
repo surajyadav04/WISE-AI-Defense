@@ -1,4 +1,4 @@
-// blocked.js - Handles logic for the WADE block screen
+// blocked.js - Handles logic for the WISE block screen
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Extract the URL parameters passed from content.js

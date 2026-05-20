@@ -24,9 +24,9 @@ import uvicorn
 
 # --- CONFIG & LOGGING ---
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("WadeEngine")
+logger = logging.getLogger("WiseEngine")
 
-app = FastAPI(title="WADE Engine Ultimate", version="5.0")
+app = FastAPI(title="WISE Engine Ultimate", version="5.0")
 
 # API KEYS (Fetched from Hugging Face Cloud Secrets)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -53,7 +53,7 @@ app.add_middleware(
 )
 
 # --- DATABASE SETUP ---
-DB_PATH = "wade_logs.db"
+DB_PATH = "wise_logs.db"
 def init_db():
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute('''CREATE TABLE IF NOT EXISTS logs 
@@ -67,7 +67,7 @@ class ThreatIntel:
         self.loaded = False
 
     async def update_feeds(self):
-        logger.info("🔄 WADE: Updating Threat Intelligence from GitHub & URLHaus...")
+        logger.info("🔄 WISE: Updating Threat Intelligence from GitHub & URLHaus...")
         sources = [
             "https://urlhaus.abuse.ch/downloads/text_online/",
             "https://raw.githubusercontent.com/mitchellkrogza/Phishing.Database/master/phishing-links-ACTIVE.txt"
@@ -86,7 +86,7 @@ class ThreatIntel:
                 except Exception as e:
                     logger.error(f"⚠️ Feed Error ({source}): {e}")
                 self.loaded = True
-        logger.info(f"✅ WADE Intel Updated: {len(self.malicious_urls)} Active Threats.")
+        logger.info(f"✅ WISE Intel Updated: {len(self.malicious_urls)} Active Threats.")
 
 intel_db = ThreatIntel()
 
@@ -175,7 +175,7 @@ class HybridScanner:
         
         # FIX: Explicit JSON instructions in System Prompt
         system_prompt = (
-            "You are WADE Security AI. You analyze URLs for phishing and malware threats.\n"
+            "You are WISE Security AI. You analyze URLs for phishing and malware threats.\n"
             "BE OBJECTIVE, NOT PARANOID. If VirusTotal is 0 and the site is > 30 days old, default to SAFE.\n"
             "Only flag as MALICIOUS if the URL shows clear phishing patterns (brand typos, deceptive paths).\n"
             "You MUST return ONLY valid JSON with exactly these keys: "
@@ -229,7 +229,7 @@ async def analyze_url(request: ScanRequest, background_tasks: BackgroundTasks):
             "verdict": "MALICIOUS", 
             "threat_type": "Malware Testing Payload Detected",
             "harm": "High risk of drive-by download or remote code execution.", 
-            "effect": "Connection severed by WADE IPS", 
+            "effect": "Connection severed by WISE IPS", 
             "domain_age": -1, 
             "vt_data": {"malicious": 12, "total": 89}
         }
@@ -273,8 +273,8 @@ async def read_root():
     return """
     <html>
         <body style="background-color: #050505; color: #00f3ff; font-family: monospace; text-align: center; margin-top: 20%;">
-            <h1>🛡️ WADE ENGINE ACTIVE</h1>
-            <p>Web AI Defense Engine API is currently running and monitoring traffic.</p>
+            <h1>🛡️ WISE ENGINE ACTIVE</h1>
+            <p>Web Intelligence Security Engine API is currently running and monitoring traffic.</p>
         </body>
     </html>
     """
@@ -337,7 +337,7 @@ def get_trusted_domains():
     
     if current_time - trusted_cache["timestamp"] > 86400 or not trusted_cache["domains"]:
         try:
-            print("WADE: Downloading latest Tranco Top 10k list...")
+            print("WISE: Downloading latest Tranco Top 10k list...")
             url = "https://tranco-list.eu/top-1m.csv.zip"
             resp = requests.get(url, timeout=10)
             
@@ -353,7 +353,7 @@ def get_trusted_domains():
             custom_safe = ["paruluniversity.ac.in"]
             trusted_cache["domains"] = list(set(domains + custom_safe))
             trusted_cache["timestamp"] = current_time
-            print(f"WADE: Successfully cached {len(trusted_cache['domains'])} trusted domains.")
+            print(f"WISE: Successfully cached {len(trusted_cache['domains'])} trusted domains.")
             
         except Exception as e:
             print(f"Error fetching Tranco list: {e}")

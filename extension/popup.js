@@ -1,4 +1,4 @@
-// popup.js - Handles WADE UI Interactions
+// popup.js - Handles WISE UI Interactions
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize Tabs

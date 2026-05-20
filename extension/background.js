@@ -13,7 +13,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 function syncTrustedDomains() {
-    console.log("🛡️ WADE: Syncing Global Trusted Domains (Tranco Top 10k)...");
+    console.log("🛡️ WISE: Syncing Global Trusted Domains (Tranco Top 10k)...");
     fetch(`${API_URL}/trusted-domains`)
         .then(res => {
             if (!res.ok) throw new Error("Server asleep or unavailable");
@@ -22,11 +22,11 @@ function syncTrustedDomains() {
         .then(data => {
             if (data.success && data.domains) {
                 chrome.storage.local.set({ globalTrusted: data.domains }, () => {
-                    console.log(`✅ WADE: Successfully memorized ${data.domains.length} safe domains.`);
+                    console.log(`✅ WISE: Successfully memorized ${data.domains.length} safe domains.`);
                 });
             }
         })
-        .catch(err => console.error("❌ WADE: Failed to sync Tranco domains", err));
+        .catch(err => console.error("❌ WISE: Failed to sync Tranco domains", err));
 }
 
 // ==========================================
@@ -162,8 +162,8 @@ chrome.downloads.onCreated.addListener(function(downloadItem) {
         chrome.notifications.create({
             type: "basic",
             iconUrl: "icons/icon.png", 
-            title: "WADE Security Notice",
-            message: "Dangerous file type detected. WADE does not scan local files. Do not enable macros or run blindly!"
+            title: "WISE Security Notice",
+            message: "Dangerous file type detected. WISE does not scan local files. Do not enable macros or run blindly!"
         });
     }
 });

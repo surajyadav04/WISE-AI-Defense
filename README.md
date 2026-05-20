@@ -1,8 +1,8 @@
-# WADE: Web AI Defense Engine 🛡️
+# WISE: Web Intelligence Security Engine 🛡️
 
 ![Version](https://img.shields.io/badge/version-5.0.0-blue.svg) ![License](https://img.shields.io/badge/license-MIT-green.svg) ![Status](https://img.shields.io/badge/status-Stable-success)
 
-**WADE (Web AI Defense Engine)** is a cloud-integrated browser Intrusion Prevention System (IPS). It utilizes **Generative AI (Groq Llama-3 & Google Gemini)** and **OSINT Threat Intelligence** to detect zero-day phishing, malicious scripts, and social engineering in real-time.
+**WISE (Web Intelligence Security Engine)** is a cloud-integrated browser Intrusion Prevention System (IPS). It utilizes **Generative AI (Groq Llama-3 & Google Gemini)** and **OSINT Threat Intelligence** to detect zero-day phishing, malicious scripts, and social engineering in real-time.
 
 ---
 
@@ -21,8 +21,8 @@ Hover over links to see an instant risk assessment before you click.
 * **High-Risk Payload:** ![Malicious HUD](assets/hud-malicious.jpg)
 
 ### 2. Real-Time Intervention
-When a threat is confirmed (>75% risk), WADE forces an isolation screen.
-![WADE Block Screen](assets/blocked.png)
+When a threat is confirmed (>75% risk), WISE forces an isolation screen.
+![WISE Block Screen](assets/blocked.png)
 
 ### 3. Forensic Threat Reporting
 Click "View Threat Report" to generate an AI-powered forensic breakdown.
@@ -30,7 +30,7 @@ Click "View Threat Report" to generate an AI-powered forensic breakdown.
 
 ### 4. 3D Analytics Dashboard
 Visualize your security telemetry with our custom glass-morphic Command Center.
-![WADE Dashboard](assets/dashboard.png)
+![WISE Dashboard](assets/dashboard.png)
 
 ---
 
@@ -43,7 +43,7 @@ Visualize your security telemetry with our custom glass-morphic Command Center.
 ---
 
 ## 📦 Quick Start
-1. **Clone:** `git clone https://github.com/surajyadav04/WADE-AI-Defense.git`
+1. **Clone:** `git clone https://github.com/surajyadav04/WISE-AI-Defense.git`
 2. **Backend:** Set API keys (`GROQ`, `GEMINI`, `VIRUSTOTAL`) and run `python app.py`.
 3. **Extension:** Load the `/extension` folder in `chrome://extensions/`.
 

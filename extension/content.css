@@ -1,7 +1,7 @@
-/* --- WADE HOVER STYLES (Injected into Websites) --- */
+/* --- WISE HOVER STYLES (Injected into Websites) --- */
 
 /* The "Target Lock" - Cyan Underline */
-.wade-target-locked {
+.wise-target-locked {
     position: relative;
     border-bottom: 2px solid #00d9ff !important;
     cursor: crosshair !important;
@@ -10,7 +10,7 @@
 }
 
 /* The "Scanning" Pulse */
-.wade-scanning {
+.wise-scanning {
     animation: scanPulse 1s infinite;
     background: rgba(255, 200, 0, 0.1);
     cursor: wait !important;
@@ -23,7 +23,7 @@
 }
 
 /* The Dangerous Link Style */
-.wade-dangerous {
+.wise-dangerous {
     background: repeating-linear-gradient(
       45deg,
       rgba(255,0,0,0.1),
@@ -38,7 +38,7 @@
 /* --- NEW HUD STYLES (Matches hover_script.js) --- */
 
 /* The Main Container */
-#wade-hud-container {
+#wise-hud-container {
     pointer-events: none; /* Let clicks pass through */
     animation: hudFadeIn 0.2s ease-out;
 }
@@ -49,7 +49,7 @@
 }
 
 /* The Cyberpunk Box */
-.wade-box {
+.wise-box {
     background: rgba(10, 10, 15, 0.95); /* Deep Dark Blue/Black */
     border: 1px solid #00f3ff;          /* Cyan Border */
     border-radius: 4px;
@@ -63,7 +63,7 @@
 }
 
 /* Header Section */
-.wade-header {
+.wise-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -72,7 +72,7 @@
     padding-bottom: 4px;
 }
 
-.wade-title {
+.wise-title {
     font-size: 10px;
     letter-spacing: 2px;
     color: #555;
@@ -81,7 +81,7 @@
 }
 
 /* The Target URL */
-.wade-target {
+.wise-target {
     color: #fff;
     font-weight: bold;
     font-size: 12px;
@@ -92,7 +92,7 @@
 }
 
 /* The Verdict (SAFE / DANGEROUS) */
-.wade-status {
+.wise-status {
     font-size: 18px;
     font-weight: 800;
     margin: 8px 0;
@@ -100,7 +100,7 @@
 }
 
 /* --- content.css --- */
-.wade-blocked-link {
+.wise-blocked-link {
     background-color: #ff4c4c !important;
     color: #ffffff !important;
     font-weight: bold !important;
@@ -111,12 +111,12 @@
     border-radius: 3px;
 }
 
-.wade-xss-warning {
+.wise-xss-warning {
     outline: 2px dashed #ff4c4c !important;
 }
 
 /* Loading Spinner */
-.wade-spinner {
+.wise-spinner {
     width: 10px;
     height: 10px;
     border: 2px solid #333;
