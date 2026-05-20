@@ -249,4 +249,66 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
         return true;
     }
+
+    // ==========================================
+    // 7. REAL-TIME TELEMETRY (NEW SOC ARCHITECTURE)
+    // ==========================================
+    if (request.action === "telemetry_event") {
+        handleTelemetryEvent(request.payload);
+        return true;
+    }
+    
+    // Serve latest telemetry to popup
+    if (request.action === "GET_LATEST_TELEMETRY") {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            if (tabs[0]?.url) {
+                const domain = new URL(tabs[0].url).hostname;
+                sendResponse({ data: activeTelemetry[domain] || {} });
+            } else {
+                sendResponse({ data: {} });
+            }
+        });
+        return true;
+    }
 });
+
+// --- Telemetry WebSocket Streaming ---
+let ws = null;
+const activeTelemetry = {};
+
+function connectTelemetryWS() {
+    try {
+        ws = new WebSocket("ws://localhost:8000/ws/telemetry");
+        ws.onopen = () => console.log("✅ WISE: Telemetry Stream Connected");
+        ws.onclose = () => {
+            console.log("⚠️ WISE: Telemetry Stream Disconnected. Retrying...");
+            setTimeout(connectTelemetryWS, 5000);
+        };
+        ws.onerror = (e) => console.log("WebSocket Error", e);
+    } catch (e) {
+        console.error("WS init failed", e);
+    }
+}
+connectTelemetryWS();
+
+function handleTelemetryEvent(payload) {
+    const { domain, type, data } = payload;
+    
+    // Store locally for Popup UI
+    if (!activeTelemetry[domain]) {
+        activeTelemetry[domain] = { permissions: {}, trackers: [], fingerprinting: [], events: [] };
+    }
+    
+    if (type === "PERMISSION_STATUS") {
+        activeTelemetry[domain].permissions[data.permission] = data.state;
+    } else if (type === "FINGERPRINT_ATTEMPT") {
+        activeTelemetry[domain].fingerprinting.push(data.method);
+    } else if (type === "POPUP_ATTEMPT" || type === "FULLSCREEN_ATTEMPT" || type === "DEVICE_ACCESS" || type === "CLIPBOARD_ACCESS") {
+        activeTelemetry[domain].events.push({ type, data, time: Date.now() });
+    }
+
+    // Stream to Backend
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(payload));
+    }
+}

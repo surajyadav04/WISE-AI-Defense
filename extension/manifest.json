@@ -22,18 +22,18 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js", "hover_script.js"],
+      "js": ["content.js", "hover_script.js", "content_scanner.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup_build/index.html",
     "default_icon": "icons/icon.png"
   },
   "web_accessible_resources": [
     {
-      "resources": ["blocked.html"],
+      "resources": ["blocked.html", "telemetry_injector.js"],
       "matches": ["<all_urls>"]
     }
   ]

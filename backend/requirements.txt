@@ -4,8 +4,4 @@ requests
 python-dotenv
 pydantic
 httpx
-groq
-google-generativeai
-python-whois
-flask
-flask_cors
+websockets
