@@ -78,11 +78,13 @@ function showHUD(element, url) {
     
     hud.style.cssText = `
         position: absolute; z-index: 2147483647;
-        background: rgba(5, 5, 8, 0.98); border: 1px solid #00f3ff;
-        color: #00f3ff; padding: 15px; border-radius: 6px;
-        font-family: 'Courier New', monospace; font-size: 12px;
-        backdrop-filter: blur(8px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-        min-width: 260px; pointer-events: none; text-align: left; opacity: 0; transition: opacity 0.2s;
+        background: rgba(6, 10, 18, 0.95); border: 1px solid rgba(0, 243, 255, 0.3);
+        color: #e2e8f0; padding: 18px; border-radius: 8px;
+        font-family: 'Sora', 'Segoe UI', sans-serif; font-size: 12px;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 243, 255, 0.15);
+        min-width: 280px; pointer-events: none; text-align: left; opacity: 0; 
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     `;
     
     const rect = element.getBoundingClientRect();
@@ -90,11 +92,11 @@ function showHUD(element, url) {
     hud.style.left = (window.scrollX + rect.left) + 'px';
     
     hud.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 10px; height: 10px; border-radius: 50%; background: #00f3ff; box-shadow: 0 0 10px #00f3ff; animation: pulse 1s infinite;"></div>
-            <span id="wise-hud-status">SCANNING TARGET...</span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 12px; height: 12px; border-radius: 50%; background: #00f3ff; box-shadow: 0 0 12px #00f3ff; animation: pulse 1.5s infinite;"></div>
+            <span id="wise-hud-status" style="font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 2px; font-size: 11px; color: #00f3ff;">SCANNING TARGET...</span>
         </div>
-        <style>@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }</style>
+        <style>@keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }</style>
     `;
     
     document.body.appendChild(hud);
@@ -134,27 +136,33 @@ function showHUD(element, url) {
         if (currentHUD !== hud) return;
 
         if (!response || !response.success) {
-            hud.innerHTML = `<div style="color:#ff4c4c;">⚠️ Analysis Failed</div>`;
+            hud.innerHTML = `<div style="color:#ef4444; font-weight: 600;">⚠️ Analysis Failed</div>`;
             setTimeout(() => { if (currentHUD === hud) hud.remove(); }, 1500);
             return;
         }
 
         const data = response.data;
         let color = '#00f3ff';
-        if (data.risk_score > 30) color = '#ffa500';
-        if (data.risk_score > 75) color = '#ff003c';
+        let shadowColor = 'rgba(0, 243, 255, 0.2)';
+        if (data.risk_score > 30) { color = '#f59e0b'; shadowColor = 'rgba(245, 158, 11, 0.2)'; }
+        if (data.risk_score > 75) { color = '#ef4444'; shadowColor = 'rgba(239, 68, 68, 0.2)'; }
 
         hud.style.borderColor = color;
-        hud.style.boxShadow = `0 0 20px ${color}40`;
+        hud.style.boxShadow = `0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px ${shadowColor}`;
 
         hud.innerHTML = `
-            <div style="border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 8px; display: flex; justify-content: space-between;">
-                <span style="color: #888; font-size: 10px;">WISE PROTOCOL</span>
-                <span style="color: ${color}; font-weight: bold; font-size: 14px;">RISK: ${data.risk_score}%</span>
+            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #64748b; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">WISE PROTOCOL</span>
+                <span style="color: ${color}; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; text-shadow: 0 0 10px ${shadowColor};">RISK: ${data.risk_score}%</span>
             </div>
-            <div style="margin-bottom: 6px; font-weight: bold; color: #fff;">${formatAge(data.domain_age)}</div>
-            <div style="margin-bottom: 10px; font-size: 11px; color: #aaa;">${formatVT(data.vt_data)}</div>
-            ${data.risk_score > 0 ? `<div style="color:${color}">⚠️ ${data.threat_type || "Threat Detected"}</div>` : `<div style="color:#00ff00">✅ VERIFIED SAFE</div>`}
+            <div style="margin-bottom: 8px; font-weight: 600; color: #e2e8f0; display: flex; align-items: center; gap: 8px;">
+                <span style="background: rgba(255, 255, 255, 0.05); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 11px;">${formatAge(data.domain_age)}</span>
+            </div>
+            <div style="margin-bottom: 12px; font-size: 11px; color: #94a3b8; line-height: 1.4;">${formatVT(data.vt_data)}</div>
+            ${data.risk_score > 0 ? 
+                `<div style="color: ${color}; font-weight: 600; font-size: 11px; background: ${shadowColor}; padding: 8px; border-radius: 4px; border: 1px solid ${color};">⚠️ ${data.threat_type || "Threat Detected"}</div>` : 
+                `<div style="color: #10b981; font-weight: 600; font-size: 11px; background: rgba(16, 185, 129, 0.1); padding: 8px; border-radius: 4px; border: 1px solid #10b981;">✅ VERIFIED SAFE TARGET</div>`
+            }
         `;
     });
 }
