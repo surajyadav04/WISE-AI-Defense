@@ -3,6 +3,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadDashboardData();
     init3DTilt();
+    initSpotlightGlow();
+    initBackgroundParticles();
 
     // --- SMART URL EXTRACTOR ---
     function extractHostname(input) {
@@ -246,52 +248,135 @@ function modifyList(listType, action, domain) {
     });
 }
 
+// --- SPOTLIGHT HOVER GLOW SYSTEM ---
+function initSpotlightGlow() {
+    const cards = document.querySelectorAll('.interactive-3d');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+}
+
+// --- DYNAMIC BACKGROUND NETWORK NODES ---
+function initBackgroundParticles() {
+    const canvas = document.createElement("canvas");
+    canvas.id = "cyber-bg-canvas";
+    canvas.style.position = "fixed";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.zIndex = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.opacity = "0.35";
+    document.body.prepend(canvas);
+
+    const ctx = canvas.getContext("2d");
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener("resize", () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const maxParticles = 60;
+
+    for (let i = 0; i < maxParticles; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            radius: Math.random() * 1.5 + 0.8
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "rgba(0, 243, 255, 0.25)";
+        ctx.strokeStyle = "rgba(0, 243, 255, 0.04)";
+
+        for (let i = 0; i < maxParticles; i++) {
+            const p1 = particles[i];
+            p1.x += p1.vx;
+            p1.y += p1.vy;
+
+            if (p1.x < 0 || p1.x > width) p1.vx *= -1;
+            if (p1.y < 0 || p1.y > height) p1.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            for (let j = i + 1; j < maxParticles; j++) {
+                const p2 = particles[j];
+                const dx = p1.x - p2.x;
+                const dy = p1.y - p2.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 110) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+}
+
 // --- FORENSIC REPORT MODAL GENERATOR ---
 function showForensicModal(scan) {
-    // Generate contextual data based on the AI's risk score
     let threatType = scan.score > 75 ? "Malware / Phishing Payload" : "Unknown Anomaly";
     let harm = scan.score > 75 ? "High risk of drive-by download, credential theft, or remote code execution." : "Potential tracker or suspicious script.";
     let action = "Connection Severed by WISE Edge-Sensor.";
 
-    // Hardcoded context specifically for the presentation demo
     if (scan.url.includes("wicar.org")) {
         threatType = "Malware Testing Payload Detected";
         harm = "System exploit demonstration. High risk of Remote Code Execution if left unblocked.";
     }
 
     const modalHtml = `
-        <div id="wise-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:9999; display:flex; justify-content:center; align-items:center;">
-            <div style="background:#0a0a0c; border:1px solid #ff003c; box-shadow:0 0 40px rgba(255,0,60,0.4); width:600px; padding:30px; font-family:'Courier New', monospace; color:#00f3ff; border-radius:8px; position:relative;">
-                <button onclick="document.getElementById('wise-modal').remove()" style="position:absolute; top:10px; right:15px; background:transparent; border:none; color:#ff003c; font-size:20px; cursor:pointer;">✖</button>
+        <div id="wise-modal" class="wise-modal-overlay">
+            <div class="wise-modal-content">
+                <button onclick="document.getElementById('wise-modal').remove()" class="modal-close-btn">✖</button>
                 
-                <h2 style="color:#ff003c; text-transform:uppercase; border-bottom:1px solid #ff003c; padding-bottom:10px; margin-top:0;">🚨 Forensic Threat Report</h2>
+                <h2 class="modal-title">🚨 Forensic Threat Report</h2>
 
-                <p style="color:#888; margin-bottom:5px; font-size:12px;">TARGET URL</p>
-                <p style="color:#fff; word-break:break-all; margin-top:0; background:#111; padding:10px; border-left:3px solid #ff003c;">${scan.url}</p>
+                <p style="color: var(--text-muted); margin-bottom: 5px; font-size: 10px; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">Target Telemetry URL</p>
+                <p style="color: var(--text-main); word-break: break-all; margin-top: 0; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 12px; border-left: 3px solid var(--danger-red); border-radius: 6px; font-family: monospace; font-size: 12px;">${scan.url}</p>
 
-                <div style="display:flex; gap:20px; margin:20px 0;">
-                    <div style="flex:1; background:#111; padding:15px; text-align:center; border-radius:4px; border:1px solid #333;">
-                        <p style="color:#888; margin:0 0 5px 0; font-size:12px;">RISK SCORE</p>
-                        <h1 style="color:#ff003c; margin:0; font-size:40px; text-shadow: 0 0 10px #ff003c;">${scan.score}%</h1>
+                <div style="display: flex; gap: 20px; margin: 20px 0;">
+                    <div style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 15px; text-align: center; border-radius: 8px;">
+                        <p style="color: var(--text-muted); margin: 0 0 5px 0; font-size: 11px; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px;">RISK SCORE</p>
+                        <h1 style="color: var(--danger-red); margin: 0; font-family: 'Orbitron', sans-serif; font-size: 38px; font-weight: 900; text-shadow: 0 0 10px var(--danger-glow);">${scan.score}%</h1>
                     </div>
-                    <div style="flex:1; background:#111; padding:15px; text-align:center; border-radius:4px; border:1px solid #333;">
-                        <p style="color:#888; margin:0 0 5px 0; font-size:12px;">VERDICT</p>
-                        <h1 style="color:#ff003c; margin:0; font-size:28px; margin-top:10px;">${scan.verdict}</h1>
+                    <div style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 15px; text-align: center; border-radius: 8px; display: flex; flex-direction: column; justify-content: center;">
+                        <p style="color: var(--text-muted); margin: 0 0 5px 0; font-size: 11px; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px;">VERDICT</p>
+                        <span class="badge danger" style="align-self: center; font-size: 11px; padding: 6px 12px;">${scan.verdict}</span>
                     </div>
                 </div>
 
-                <p style="color:#888; margin-bottom:5px; font-size:12px;">AI THREAT ANALYSIS</p>
-                <div style="background:#111; padding:15px; border-radius:4px; color:#ddd; line-height:1.6; border:1px solid #333;">
-                    <p style="margin-top:0;"><strong>Classification:</strong> <span style="color:#ffa500">${threatType}</span></p>
-                    <p><strong>Scope & Harm:</strong> ${harm}</p>
-                    <p style="margin-bottom:0;"><strong>WISE Protocol:</strong> <span style="color:#00ff66">${action}</span></p>
+                <p style="color: var(--text-muted); margin-bottom: 5px; font-size: 10px; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">WISE Cognitive Intelligence Report</p>
+                <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; color: var(--text-main); font-size: 12px; line-height: 1.6;">
+                    <p style="margin-top: 0; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 6px;"><strong>Classification:</strong> <span style="color: var(--warn-orange); font-weight: 600;">${threatType}</span></p>
+                    <p style="border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 6px;"><strong>Scope & Harm:</strong> ${harm}</p>
+                    <p style="margin-bottom: 0;"><strong>Active Protocol:</strong> <span style="color: var(--safe-green); font-weight: 600;">${action}</span></p>
                 </div>
 
-                <button onclick="document.getElementById('wise-modal').remove()" style="margin-top:25px; width:100%; padding:15px; background:#ff003c; color:#fff; border:none; font-weight:bold; font-size:16px; font-family:'Courier New', monospace; cursor:pointer; letter-spacing:2px; transition:0.3s;" onmouseover="this.style.background='#cc0030'" onmouseout="this.style.background='#ff003c'">ACKNOWLEDGE & CLOSE</button>
+                <button onclick="document.getElementById('wise-modal').remove()" class="cyber-btn primary" style="width: 100%; padding: 14px; margin-top: 25px; font-size: 11px;">ACKNOWLEDGE & CLOSE REPORT</button>
             </div>
         </div>
     `;
     
-    // Inject the modal into the dashboard
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
