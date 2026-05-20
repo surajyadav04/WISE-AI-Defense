@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     initSpotlightGlow();
     initLiveClock();
     initNetworkStatus();
+    
+    // Fetch live hardware telemetry
+    fetchDashboardTelemetry();
+    setInterval(fetchDashboardTelemetry, 1500);
 
     // --- SMART URL EXTRACTOR ---
     function extractHostname(input) {
@@ -321,4 +325,33 @@ function showForensicModal(scan) {
     `;
     
     document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// --- TELEMETRY FETCHER ---
+function fetchDashboardTelemetry() {
+    chrome.runtime.sendMessage({ action: "GET_LATEST_TELEMETRY" }, (res) => {
+        if (!res || !res.data) return;
+        const tel = res.data;
+        
+        if (tel.permissions) {
+            updateDashSensorBadge('dash-sensor-camera', tel.permissions.camera);
+            updateDashSensorBadge('dash-sensor-mic', tel.permissions.microphone);
+            updateDashSensorBadge('dash-sensor-location', tel.permissions.geolocation);
+            updateDashSensorBadge('dash-sensor-clipboard', tel.permissions['clipboard-read']);
+        }
+    });
+}
+
+function updateDashSensorBadge(id, state) {
+    const badge = document.getElementById(id);
+    if (!badge || !state) return;
+    
+    badge.innerText = state.toUpperCase();
+    if (state === 'granted') {
+        badge.style.color = '#ef4444';
+        badge.style.background = 'rgba(239, 68, 68, 0.2)';
+    } else if (state === 'denied' || state === 'prompt') {
+        badge.style.color = '#10b981';
+        badge.style.background = 'rgba(16, 185, 129, 0.2)';
+    }
 }

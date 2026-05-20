@@ -3,11 +3,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize Tabs
     document.getElementById('tab-scan').addEventListener('click', () => switchTab('scan'));
+    document.getElementById('tab-sensors').addEventListener('click', () => switchTab('sensors'));
     document.getElementById('tab-history').addEventListener('click', () => switchTab('history'));
 
     // 2. Load Data on Startup
     requestScan();
     loadHistory();
+    fetchTelemetry();
+    setInterval(fetchTelemetry, 1500);
 
     // 3. Initialize Live Systems
     initLiveClock();
@@ -357,3 +360,45 @@ chrome.runtime.onMessage.addListener((req) => {
         updateDashboard(req.data);
     }
 });
+
+// ===== TELEMETRY FETCHER =====
+function fetchTelemetry() {
+    chrome.runtime.sendMessage({ action: "GET_LATEST_TELEMETRY" }, (res) => {
+        if (!res || !res.data) return;
+        const tel = res.data;
+        
+        // Update Permissions
+        if (tel.permissions) {
+            updateSensorBadge('sensor-camera', tel.permissions.camera);
+            updateSensorBadge('sensor-mic', tel.permissions.microphone);
+            updateSensorBadge('sensor-location', tel.permissions.geolocation);
+            updateSensorBadge('sensor-clipboard', tel.permissions['clipboard-read']);
+        }
+        
+        // Update Fingerprinting
+        const fpList = document.getElementById('fingerprint-list');
+        if (tel.fingerprinting && tel.fingerprinting.length > 0) {
+            fpList.innerHTML = '';
+            tel.fingerprinting.forEach(fp => {
+                const span = document.createElement('span');
+                span.style.cssText = "font-size: 11px; color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 4px; border-radius: 4px; font-family: monospace;";
+                span.innerText = "🚨 " + fp;
+                fpList.appendChild(span);
+            });
+        }
+    });
+}
+
+function updateSensorBadge(id, state) {
+    const badge = document.getElementById(id);
+    if (!badge || !state) return;
+    
+    badge.innerText = state.toUpperCase();
+    if (state === 'granted') {
+        badge.style.color = '#ef4444';
+        badge.style.background = 'rgba(239, 68, 68, 0.2)';
+    } else if (state === 'denied' || state === 'prompt') {
+        badge.style.color = '#10b981';
+        badge.style.background = 'rgba(16, 185, 129, 0.2)';
+    }
+}
