@@ -1,98 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WISE - Web Intelligence Security Engine</title>
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="popup.css">
-    <style>
-        body { width: 350px; background: #050505; color: white; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
-        
-        .tabs { display: flex; border-bottom: 1px solid #333; background: #111; }
-        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; color: #888; transition: 0.3s; font-weight: bold; }
-        .tab.active { color: #00f3ff; border-bottom: 2px solid #00f3ff; background: #0a0a0a; }
-        
-        .view { display: none; padding: 15px; }
-        .view.active { display: block; }
-
-        /* SCANNER STYLES */
-        .ring-container { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
-        .ring-circle { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #333; box-sizing: border-box; transition: border-color 0.5s; }
-        .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; font-weight: bold; color: white; }
-        
-        .data-grid { display: grid; grid-template-columns: 1fr; gap: 10px; text-align: left; font-size: 12px; }
-        .data-row { background: #111; padding: 10px; border-radius: 4px; border-left: 3px solid #333; }
-        .label { color: #888; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        .value { color: #fff; font-weight: bold; }
-
-        .harm-box { border: 1px solid #ff003c; background: rgba(255, 0, 60, 0.1); padding: 10px; margin-top: 10px; border-radius: 4px; display: none; }
-        
-        /* HISTORY STYLES */
-        .history-item { border-bottom: 1px solid #222; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .h-url { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; color: #ccc; }
-        .h-score { font-weight: bold; font-size: 12px; }
-        .safe { color: #00f3ff; } .sus { color: #ffa500; } .danger { color: #ff003c; }
-
-        /* BUTTONS */
-        button { background: #00f3ff; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 4px; }
-        button:hover { background: #fff; }
-
-        /* DASHBOARD BUTTON STYLE */
-        .btn-dash { background: transparent; color: #00f3ff; border: 1px solid #00f3ff; margin-top: 10px; }
-        .btn-dash:hover { background: rgba(0, 243, 255, 0.1); color: #fff; }
-
-        /* DANGER / RESET BUTTON STYLE */
-        .btn-danger { background: #222; color: #ff003c; border: 1px solid #ff003c; margin-top: 20px; }
-        .btn-danger:hover { background: #ff003c; color: white; }
-    </style>
 </head>
 <body>
+    <!-- Futuristic Grid & Scanner Lines -->
+    <div class="cyber-grid"></div>
+    <div class="scanline"></div>
 
-    <div class="tabs">
-        <div class="tab active" id="tab-scan">SCANNER</div>
-        <div class="tab" id="tab-history">HISTORY</div>
-    </div>
-
-    <div id="view-scan" class="view active">
-        <div class="ring-container">
-            <div class="ring-circle" id="score-ring"></div>
-            <div class="score-text" id="score-num">--</div>
-            <div style="position:absolute; bottom:-20px; width:100%; text-align:center; font-size:10px; color:#888;">RISK SCORE</div>
-        </div>
-
-        <div id="harm-display" class="harm-box">
-            <div style="color:#ff9999; margin-bottom:5px;">⚠️ <strong>THREAT:</strong> <span id="harm-cause"></span></div>
-            <div style="color:#fff;">💥 <strong>EFFECT:</strong> <span id="harm-effect"></span></div>
-        </div>
-
-        <div class="data-grid" style="margin-top: 15px;">
-            <div class="data-row">
-                <span class="label">Target Domain</span>
-                <span class="value" id="domain-name" style="color:#00f3ff;">Scanning...</span>
+    <div class="hud-container">
+        <!-- High-Tech Navigation Tabs -->
+        <div class="tabs">
+            <div class="tab active" id="tab-scan">
+                <span class="tab-icon">⚡</span>
+                <span class="tab-text">SCANNER</span>
             </div>
-            <div class="data-row">
-                <span class="label">Domain Age</span>
-                <span class="value" id="domain-age">--</span>
-            </div>
-            <div class="data-row">
-                <span class="label">VirusTotal Intelligence</span>
-                <span class="value" id="vt-data">--</span>
+            <div class="tab" id="tab-history">
+                <span class="tab-icon">📜</span>
+                <span class="tab-text">HISTORY</span>
             </div>
         </div>
 
-        <button id="scan-btn">🔄 RE-SCAN TAB</button>
-        <button id="open-dashboard" class="btn-dash">📊 OPEN COMMAND CENTER</button>
-    </div>
+        <!-- Scanner Interface -->
+        <div id="view-scan" class="view active">
+            <!-- Glowing Hologram Radar Orb -->
+            <div class="orb-container">
+                <div class="orb-outer-glow"></div>
+                <div class="orb-ring" id="score-ring"></div>
+                <div class="orb-core">
+                    <div class="score-label">RISK LEVEL</div>
+                    <div class="score-text" id="score-num">--</div>
+                    <div class="score-percent">%</div>
+                </div>
+            </div>
 
-    <div id="view-history" class="view">
-        <div style="text-align: right; margin-bottom: 10px;">
-            <span style="font-size: 10px; color: #555; cursor: pointer;" id="clear-history">CLEAR LOGS</span>
-        </div>
-        
-        <div id="history-list">
-            <div style="text-align:center; color:#555; margin-top:20px;">No recent scans.</div>
+            <!-- Threat Warning Box (Hidden by default) -->
+            <div id="harm-display" class="harm-box">
+                <div class="harm-header">
+                    <span class="harm-alert-icon">⚠️</span>
+                    <span class="harm-alert-title">SECURITY THREAT DETECTED</span>
+                </div>
+                <div class="harm-row">
+                    <span class="harm-label">THREAT TYPE:</span>
+                    <span class="harm-value" id="harm-cause"></span>
+                </div>
+                <div class="harm-row">
+                    <span class="harm-label">IMPACT:</span>
+                    <span class="harm-value" id="harm-effect"></span>
+                </div>
+            </div>
+
+            <!-- System Diagnostics Data Grid -->
+            <div class="data-grid">
+                <div class="data-row">
+                    <div class="row-header">
+                        <span class="row-icon">🌐</span>
+                        <span class="label">Target Hostname</span>
+                    </div>
+                    <span class="value" id="domain-name">Checking...</span>
+                </div>
+                <div class="data-row">
+                    <div class="row-header">
+                        <span class="row-icon">📅</span>
+                        <span class="label">Domain Integrity Age</span>
+                    </div>
+                    <span class="value" id="domain-age">--</span>
+                </div>
+                <div class="data-row">
+                    <div class="row-header">
+                        <span class="row-icon">📡</span>
+                        <span class="label">Threat Intel Feed</span>
+                    </div>
+                    <span class="value" id="vt-data">--</span>
+                </div>
+            </div>
+
+            <!-- Action Controllers -->
+            <div class="action-buttons">
+                <button id="scan-btn" class="cyber-btn primary">
+                    <span class="btn-glow"></span>
+                    <span class="btn-text">🔄 RE-SCAN DOMAIN</span>
+                </button>
+                <button id="open-dashboard" class="cyber-btn secondary">
+                    <span class="btn-glow"></span>
+                    <span class="btn-text">📊 CORE DASHBOARD</span>
+                </button>
+            </div>
         </div>
 
-        <button id="btn-reset" class="btn-danger">⚠️ RESET TRUSTED SITES</button>
-        <div style="font-size:10px; color:#555; text-align:center; margin-top:5px;">(Forget "Proceed Anyway" choices)</div>
+        <!-- History Interface -->
+        <div id="view-history" class="view">
+            <div class="history-controls">
+                <span class="history-title">Activity Logs</span>
+                <span id="clear-history" class="clear-btn">✖ CLEAR ALL</span>
+            </div>
+            
+            <!-- Custom Scrollable Log List -->
+            <div class="history-scroll-panel">
+                <div id="history-list" class="history-list">
+                    <div class="empty-logs">No threat history detected.</div>
+                </div>
+            </div>
+
+            <button id="btn-reset" class="cyber-btn warning">
+                <span class="btn-glow"></span>
+                <span class="btn-text">⚠️ RESET USER EXEMPTIONS</span>
+            </button>
+            <div class="btn-desc">(Clear manually whitelisted / bypassed domains)</div>
+        </div>
     </div>
 
     <script src="popup.js"></script>
