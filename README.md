@@ -50,4 +50,4 @@ Visualize your security telemetry with our custom glass-morphic Command Center.
 ---
 
 ## 👨‍💻 Author
-**ADITYA KUMAR** | Cybersecurity Strategist & B.Tech CSE Student, Parul University.
+**ADITYA KUMAR** | B.Tech CSE Student, Parul University.
